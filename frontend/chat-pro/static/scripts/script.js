@@ -12,7 +12,7 @@ if (form_registration !== null) {
         const password = document.getElementById('password').value;
         const nameU = document.getElementById("name").value;
         const lastnameU = document.getElementById("lastname").value;
-        let user = { "nombre": nameU, "apellidos": lastnameU}
+        let user = {"email": email};
         localStorage.setItem("datosUsuario", JSON.stringify(user));
         const { error, data } = await createUser(email, password);
         if (error) {

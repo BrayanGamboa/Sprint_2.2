@@ -1,23 +1,26 @@
 -- DROP USER IF EXISTS brayangamboa;
 -- CREATE USER brayangamboa; 
 -- ALTER USER brayangamboa WITH PASSWORD '0419';
--- DROP DATABASE IF EXISTS semillero_sas;
-
--- CREATE DATABASE semillero_sas WITH ENCODING = 'UTF8';
-
--- \ c semillero_sas;
-
+DROP DATABASE IF EXISTS semillero_sas;
+CREATE DATABASE semillero_sas WITH ENCODING = 'UTF8';
+\ c semillero_sas;
 DROP TABLE IF EXISTS vehiculo;
 
 DROP TABLE IF EXISTS linea;
 
 DROP TABLE IF EXISTS marca;
 
+DROP TABLE IF EXISTS users;
+
 DROP SEQUENCE IF EXISTS linea_seq;
 
 DROP TYPE IF EXISTS estado;
 
 DROP TYPE IF EXISTS nombre_marca;
+
+DROP TYPE IF EXISTS rol;
+
+CREATE TYPE rol AS ENUM ('admin', 'user');
 
 CREATE TYPE nombre_marca AS ENUM(
     'Mazda',
@@ -34,14 +37,24 @@ CREATE TYPE nombre_marca AS ENUM(
 
 CREATE TYPE estado AS ENUM ('S', 'N');
 
+CREATE SEQUENCE linea_seq;  
+CREATE SEQUENCE user_seq;  
+
+CREATE TABLE users(
+    id integer NOT NULL DEFAULT nextval('user_seq'),
+    email TEXT NOT NULL,
+    nombre TEXT NOT NULL,
+    apellido TEXT NOT NULL,
+    rol rol NOT NULL,
+    CONSTRAINT pk_users PRIMARY KEY (email)
+);
+
 CREATE TABLE marca(
-    nombre nombre_marca UNIQUE NOT NULL,
+    nombre nombre_marca NOT NULL,
     descripcion TEXT NOT NULL,
     estado estado NOT NULL,
     CONSTRAINT pk_name_marca PRIMARY KEY (nombre)
 );
-
-CREATE SEQUENCE linea_seq;
 
 CREATE TABLE linea(
     id_linea INT NOT NULL DEFAULT NEXTVAL('linea_seq'),
@@ -53,7 +66,7 @@ CREATE TABLE linea(
 );
 
 CREATE TABLE vehiculo(
-    num_placa TEXT NOT NULL UNIQUE,
+    num_placa TEXT NOT NULL,
     modelo DATE NOT NULL,
     fch_vence_seg DATE NOT NULL,
     fch_vence_tecno DATE NOT NULL,
@@ -63,7 +76,7 @@ CREATE TABLE vehiculo(
     CONSTRAINT fk_marca_vehiculo FOREIGN KEY (linea) REFERENCES linea(id_linea)
 );
 
-\dt;
+\ dt;
 
 INSERT INTO
     marca (nombre, descripcion, estado)
@@ -182,6 +195,11 @@ SELECT
     *
 FROM
     linea;
+
+INSERT INTO
+    users (email, nombre, apellido, rol)
+VALUES
+    ('bsgv2005@gmail.com', 'Brayan', 'Gamboa', 'admin');
 
 INSERT INTO
     vehiculo (

@@ -11,7 +11,7 @@ title.innerHTML = `
 <nav class="d-inline">
 <a href="main.html"><img src="../img/casa-icono-silueta.png" alt="Imagen de home" class="m-5" style="width: 5%"
         id="imgHome"></a>
-<a href="../index.html">
+        <a href="../chat-pro/static/html/login.html">
     <img src="../img/account.png" alt="Imagen de logo" class="m-5" style="width: 5%; float: right;"
         id="imgLogo">
 </a>
