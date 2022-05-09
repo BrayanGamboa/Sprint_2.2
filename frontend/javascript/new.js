@@ -1,7 +1,5 @@
 let title = document.getElementById("title")
 let form = document.getElementById("form")
-let user = JSON.parse(localStorage.getItem("datosUsuario"));
-let { nombre } = user
 const API_mysql = "https://api1-bsgv.herokuapp.com"
 const API_psql = "http://localhost:5019"
 
@@ -16,7 +14,7 @@ title.innerHTML = `
         id="imgLogo">
 </a>
 </nav>
-<h1 class="text-center mb-5">${nombre}, ahora podemos registrar un auto nuevo </h1>   
+<h1 class="text-center mb-5">Ahora podemos registrar un auto nuevo </h1>   
  `;
 
  

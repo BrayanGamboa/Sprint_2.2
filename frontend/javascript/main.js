@@ -3,8 +3,6 @@ let observarAutos = document.getElementById("observarAutos");
 let crearAuto = document.getElementById("crearAuto");
 let body = document.getElementById("body");
 
-let user = JSON.parse(localStorage.getItem("datosUsuario"));
-let { nombre } = user;
 init();
 function init() {
     body.innerHTML = `
@@ -16,7 +14,7 @@ function init() {
                 id="imgLogo">
         </a>
     </nav>
-    <h1 class="text-center mb-5">${nombre}, ¿qué realizaremos hoy? </h1>
+    <h1 class="text-center mb-5">¿Qué realizaremos hoy?</h1>
     <div class="w-75 mx-auto mb-2">
 
         <div class="row row-cols-1 row-cols-md-2 g-4">

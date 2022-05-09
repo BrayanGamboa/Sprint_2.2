@@ -3,13 +3,17 @@ const hapiSwagger = require("hapi-swagger");
 const inert = require("@hapi/inert");
 const vision = require("@hapi/vision");
 const package = require("../package.json");
-require("dotenv").config();
+
 const mysqlConnection = require("./database");
 const psqlConnection = require("./database");
 const cors = require("cors");
 const uploadFile = require("../configMulter");
-const vehiculoSchemma = require("./models/vehiculo");
-const { vehiculoSchemmaNew, vehiculoSchemmaEdit } = vehiculoSchemma;
+require("dotenv").config();
+
+const {
+  vehiculoSchemmaNew,
+  vehiculoSchemmaEdit,
+} = require("./models/vehiculo");
 const marcaSchemmaEdit = require("./models/marca");
 const lineaSchemmaEdit = require("./models/linea");
 const { userSchemmaNew } = require("./models/users");
@@ -29,13 +33,7 @@ const init = async () => {
       title: "Semillero S.A.S",
       description:
         "Por medio de esta documentación buscamos como empresa dar a conocer a nuestros usuarios la manera correcta de cómo usar nuestros servicios. Esperamos les ayude.",
-      version: "1.0.1",
-      contect: {
-        name: "Brayan Gamboa",
-        email: "bsgv2005@gmail.com",
-      },
-      servers: ["http://localhost:5019"],
-      version: "1.0.0",
+      version: package.version,
     },
   };
 
@@ -44,12 +42,12 @@ const init = async () => {
     vision,
     {
       plugin: hapiSwagger,
-      option: swaggerOptions,
+      options: swaggerOptions,
     },
   ]);
 
   await servidor.start();
-  console.log("Servidor corriendo en:", servidor.info.uri);
+  console.log("Servidor corriendo en la ruta:", servidor.info.uri);
 
   servidor.route({
     method: "GET",
@@ -62,13 +60,8 @@ const init = async () => {
           )
           .code(200);
       } catch (error) {
-        return h.response(error).code(409);
+        return h.response(error).code(500);
       }
-    },
-    options: {
-      description: "Inicio",
-      notes: "Página de inicio",
-      tags: ["api", "Inicio"],
     },
   });
 
@@ -76,8 +69,8 @@ const init = async () => {
     method: "GET",
     path: "/usuario",
     handler: async (request, h) => {
+      const { rows } = await psqlConnection.query(`SELECT * FROM users;`);
       try {
-        const { rows } = await psqlConnection.query(`SELECT * FROM users;`);
         if (!rows == []) {
           return h.response(JSON.stringify(rows)).code(200);
         } else {
@@ -88,9 +81,20 @@ const init = async () => {
       }
     },
     options: {
-      description: "Get Usuarios",
-      notes: "Obtiene todos los usuarios registrados",
-      tags: ["api", "Usuarios"],
+      tags: "Vehículo",
+      description: "Servicio para observar los vehículos",
+      tags: ["api", "vehiculo"],
+      notes: ["Este servicio nos permite validar la conexión con la BD"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -98,8 +102,8 @@ const init = async () => {
     method: "GET",
     path: "/marca",
     handler: async (request, h) => {
+      const { rows } = await psqlConnection.query(`SELECT * FROM marca;`);
       try {
-        const { rows } = await psqlConnection.query(`SELECT * FROM marca;`);
         if (!rows == []) {
           return h.response(JSON.stringify(rows)).code(200);
         } else {
@@ -113,6 +117,16 @@ const init = async () => {
       description: "Get Marcas",
       notes: "Obtienes todas las marcas registradas en el sistema",
       tags: ["api", "Marcas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -135,6 +149,16 @@ const init = async () => {
       description: "Get Vehículos",
       notes: "Obtiene todos los vehículos registrados en el sistema",
       tags: ["api", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -157,6 +181,16 @@ const init = async () => {
       description: "Get Líneas",
       notes: "Obtiene todas las líneas registradas en el sistema",
       tags: ["api", "Líneas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -181,6 +215,16 @@ const init = async () => {
       description:
         "Get valores mínimos y máximos en los modelos de los vehículos",
       tags: ["api", "Auxiliares", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -204,6 +248,16 @@ const init = async () => {
       description: "Get de suma sobre los id de las líneas",
       notes: "Página de inicio",
       tags: ["api", "Auxiliares", "Líneas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -226,6 +280,16 @@ const init = async () => {
     options: {
       description: "Get de promedio sobre los id de las líneas",
       tags: ["api", "Auxiliares", "Líneas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -251,6 +315,16 @@ const init = async () => {
     options: {
       description: "Get de cantidad de líneas activas",
       tags: ["api", "Auxiliares", "Líneas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -274,6 +348,16 @@ const init = async () => {
     options: {
       description: "Filtro de vehículos con seguros vencidos.",
       tags: ["api", "Auxiliares", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -296,6 +380,16 @@ const init = async () => {
     options: {
       description: "Filtro de vehículos por modelo.",
       tags: ["api", "Auxiliares", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -319,6 +413,16 @@ const init = async () => {
     options: {
       description: "Consulta de vehículos por marca y línea.",
       tags: ["api", "Auxiliares"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -341,6 +445,16 @@ const init = async () => {
     options: {
       description: "Obtener los datos de una marca por su nombre.",
       tags: ["api", "Marcas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -363,6 +477,16 @@ const init = async () => {
     options: {
       description: "Obtener los datos de una línea por su id.",
       tags: ["api", "Líneas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
   servidor.route({
@@ -385,6 +509,16 @@ const init = async () => {
     options: {
       description: "Obtener los datos de un vehículo por su placa.",
       tags: ["api", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -408,6 +542,16 @@ const init = async () => {
     options: {
       description: "Obtener los datos de un usuario por su email.",
       tags: ["api", "Users"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
 
@@ -424,10 +568,10 @@ const init = async () => {
           linea,
           url_img,
         } = request.payload;
+        await psqlConnection.query(`INSERT INTO vehiculo (num_placa,  modelo,fch_vence_seg, 
+          fch_vence_tecno, linea, url_img) VALUES ('${num_placa}', '${modelo}','${fch_vence_seg}',  '${fch_vence_tecno}', 
+          ${linea}, '${url_img}');`);
         try {
-          await psqlConnection.query(`INSERT INTO vehiculo (num_placa,  modelo,fch_vence_seg, 
-                        fch_vence_tecno, linea, url_img) VALUES ('${num_placa}', '${modelo}','${fch_vence_seg}',  '${fch_vence_tecno}', 
-                        ${linea}, '${url_img}');`);
           return h.response("Vehículo registrado correctamente").code(200);
         } catch (error) {
           console.log(error);
@@ -436,6 +580,16 @@ const init = async () => {
       },
       description: "Crear un vehículo.",
       tags: ["api", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
       validate: {
         payload: vehiculoSchemmaNew,
       },
@@ -463,6 +617,16 @@ const init = async () => {
       },
       description: "Crear un usuario.",
       tags: ["api", "Users"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
       validate: {
         payload: userSchemmaNew,
       },
@@ -509,44 +673,50 @@ const init = async () => {
     options: {
       description: "Borrar un vehículo por su placa.",
       tags: ["api", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
     },
   });
-
-  // servidor.route({
-  //     method: 'PUT',
-  //     path: '/vehiculo/{placa}',
-  //     handler: async (request, h) => {
-
-  //         // const respuesta = await mysqlConnection.query(`UPDATE vehiculo SET ? WHERE num_placa = '${request.params.placa}';`, request.payload);
-  //         try {
-  //             h.response(`Vehículo actualizado correctamente`).code(200);
-  //         } catch (error) {
-  //             h.response(error).code(409);
-  //         }
-  //     }
-  // })
 
   servidor.route({
     method: "PUT",
     path: "/usuario/{email}",
+    handler: async (request, h) => {
+      const email = request.params.email;
+      const { nombre, apellido, rol } = request.payload;
+      await psqlConnection.query(
+        `UPDATE users SET nombre = '${nombre}', apellido = '${apellido}' rol = ${rol} WHERE email = '${email}';`
+      );
+      try {
+        return h
+          .response(`La marca '${nombre_marca}' se actualizó correctamente`)
+          .code(200);
+      } catch (error) {
+        console.log(error);
+        return h.response(error).code(409);
+      }
+    },
     options: {
-      handler: async (request, h) => {
-        const email = request.params.email;
-        const { nombre, apellido, rol } = request.payload;
-        await psqlConnection.query(
-          `UPDATE users SET nombre = '${nombre}', apellido = '${apellido}' rol = ${rol} WHERE email = '${email}';`
-        );
-        try {
-          return h
-            .response(`La marca '${nombre_marca}' se actualizó correctamente`)
-            .code(200);
-        } catch (error) {
-          console.log(error);
-          return h.response(error).code(409);
-        }
-      },
       description: "Actualizar un usuario por su email.",
       tags: ["api", "Users"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
       validate: {
         payload: userSchemmaEdit,
       },
@@ -573,6 +743,16 @@ const init = async () => {
       },
       description: "Actualizar un vehículo por su placa.",
       tags: ["api", "Vehículos"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
       validate: {
         payload: vehiculoSchemmaEdit,
       },
@@ -600,6 +780,16 @@ const init = async () => {
       },
       description: "Actualizar una marca por su nombre.",
       tags: ["api", "Marcas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
       validate: {
         payload: marcaSchemmaEdit,
       },
@@ -629,6 +819,16 @@ const init = async () => {
       },
       description: "Actualizar una linea por su id.",
       tags: ["api", "Líneas"],
+      plugins: {
+        "hapi-swagger": {
+          responses: {
+            200: { description: "Petición correcta" },
+            204: { descripcion: "Sin datos registrados" },
+            409: { descripcion: "Conflicto de datos" },
+            500: { descripcion: "Error interno del servidor" },
+          },
+        },
+      },
       validate: {
         payload: lineaSchemmaEdit,
       },

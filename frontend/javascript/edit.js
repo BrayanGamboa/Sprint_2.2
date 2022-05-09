@@ -1,9 +1,6 @@
-let user = JSON.parse(localStorage.getItem("datosUsuario"));
-let { nombre } = user;
 let body = document.getElementById("body");
 let formGet = document.getElementById("formGet");
 let formPut = document.getElementById("formPut");
-let nombreUser = document.getElementById("nombre");
 let placa = document.getElementById("placa");
 
 const API_mysql = "https://api1-bsgv.herokuapp.com"
@@ -23,7 +20,6 @@ formGet.addEventListener('submit', (e) => {
             datos = await respuesta.json();
             printData(datos)
         } catch (error) {
-            
                 swal("No hay datos", "No tenemos un vehiculo con esta placa", "error", { timer: 3000 });
                 document.getElementById("placaNew").value = ""
 
@@ -83,10 +79,6 @@ formPut.addEventListener('submit', async (e) => {
     })
         .catch(error => error)
 })
-
-nombreUser.innerHTML = `
-    ${nombre}, por favor ingresa la placa del vehículo
-`;
 
 
 function limpiar() {

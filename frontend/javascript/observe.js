@@ -1,8 +1,6 @@
 let title = document.getElementById("title")
 let container = document.getElementById("garajeAutos")
-let user = JSON.parse(localStorage.getItem("datosUsuario"));
 let body = document.getElementById("card");
-let { nombre } = user;
 let marca
 
 const API_mysql = "https://api1-bsgv.herokuapp.com"
@@ -16,6 +14,7 @@ const info = async () => {
     try {
         console.log(`Estado ${respuesta.status}: ${respuesta.statusText}`);
         const datos = await respuesta.json();
+        console.log(datos);
         printCard(datos);
 
     } catch (error) {
@@ -61,7 +60,7 @@ function printCard(datos) {
 `
     });
 
-    title.innerHTML = `<h1 class="text-center mb-5">${nombre}, estos son los autos guardados</h1>`
+    title.innerHTML = `<h1 class="text-center mb-5">Estos son los autos guardados</h1>`
 }
 
 function convertLine(linea) {
