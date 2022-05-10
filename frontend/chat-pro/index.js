@@ -17,34 +17,26 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname,'static')));
 
+app.get('', (req,res) => {
+    res.sendFile(path.join(__dirname,"static/html/registration.html"))
+    
+})
+
 //variables
 app.set('PORT', process.env.PORT || 4050);
 
-
 const httpServer = createServer(app);
-const io = new Server(httpServer,{/* Opciones */})
+const io = new Server(httpServer);
 
-app.get('', (req,res) => {
-    res.sendFile(path.join(__dirname,"static/registration.html"))
-})
 
-io.on("connection", socket => {
-    socket.on('room',(room)=>{
-        socket.join(room);
-    })
 
-    socket.on('chat:message', data => {
-        //Compartir mensaje a otros usuarios
-        //io.emit('chat:message',data);
-        io.to(data.room).emit("chat:message",data);
-    })
-    
 
-    socket.on("disconnect", () => {
-        console.log('Me desconecté',socket.id); // false
-    });
+io.on('connection', (socket) => {
+    console.log('Client connected...',socket.id);
 });
 
 httpServer.listen(app.get('PORT'), () => {
-    console.log(`server running in port: ${app.get('PORT')}`)
-})
+    console.log(`Server on port ${app.get('PORT')}`);
+});    
+
+

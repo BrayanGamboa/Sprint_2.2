@@ -53,8 +53,7 @@ if (form_login !== null) {
             swal("Bienvenido", "Iniciaste sesión satisfactoriamente", "success", { timer: 3000 });
             const user = { "email": data.email, "uid": data.uid }
             localStorage.setItem('user', JSON.stringify(user))
-            window.location.href = "../../../html/main.html";
-            
+            window.location.href = "../html/chat.html";            
         }
     })
 }
@@ -66,7 +65,7 @@ if (btn_google !== null) {
             swal("Error", "Error inesperado", "error", { timer: 3000 })
         } else {
             localStorage.setItem('user', JSON.stringify({ email: data.email, uid: data.uid }))
-            window.location.href = "../../../html/main.html"
+            window.location.href = "../html/chat.html";            
         }
     })
 }

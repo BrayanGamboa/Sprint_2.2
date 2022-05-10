@@ -81,7 +81,7 @@ form.addEventListener('submit', async (e) => {
 
   function limpiar() {
     document.getElementById("placaNew").value = ""
-    document.getElementById("urlImage").value = ""
+    document.getElementById("imagen").value = ""
     document.getElementById("nameMarca").value = ""
     document.getElementById("modelo").value = ""
     document.getElementById("seguro").value = ""
